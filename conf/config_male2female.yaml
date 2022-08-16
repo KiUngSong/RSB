@@ -1,0 +1,61 @@
+# -------- output path setting --------
+hydra:
+  run:
+    dir: experiments/${data_name}/${now:%Y-%m-%d_%H-%M-%S}
+
+
+# -------- GPU & Data setting --------
+gpu_id: 0
+data_type: custom  # toy / mnist / cifar10 / custom (celebA gender)
+train_type: translation # generation / translation
+img_size: 128
+in_channels: 3
+
+data_name: male2female
+p_data: celebA_male
+q_data: celebA_female  # Set "noise" for Generation (Prior)
+
+# Path for custom data
+p_path:
+  train: ./data/gender_dataset/train/male
+  test: ./data/gender_dataset/test/male
+q_path:
+  train: ./data/gender_dataset/train/female
+  test: ./data/gender_dataset/test/female
+
+
+# -------- Train setting --------
+mode: train # train / test
+load: False
+path: 
+  f_path: 
+  b_path: 
+
+n_ipf: 30
+num_steps: 4
+gamma: {'min' : [0.05], 'max' : [0.05]}
+
+sample_itr: 40
+num_itr: 40
+cache_num: 10  # for efficient training: replay-memory
+
+alpha: 0.5
+beta: 10
+
+train_batch_size: 32
+test_batch_size: 16
+
+sb_lr: 1e-4
+sb_lr_min: 5e-5
+ema_decay: 0.9
+
+# Logging
+verbose_ipf: 1
+
+# Use " export TORCH_CUDA_ARCH_LIST=8.0 " command for ninja error
+# -------- Model setting --------
+attn_resolutions: [16,]
+num_channels_dae: 64
+num_res_blocks: 2
+embedding_type: positional
+ch_mult: [1, 1, 2, 2, 4, 4]
